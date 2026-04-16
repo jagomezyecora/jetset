@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="900" viewBox="0 0 2400 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g2" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#2b3a42" />
+      <stop offset="100%" stop-color="#6e8890" />
+    </linearGradient>
+    <filter id="turb" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence baseFrequency="0.02" numOctaves="5" stitchTiles="stitch" result="noise" />
+      <feColorMatrix type="saturate" values="0.6" />
+      <feBlend in="SourceGraphic" in2="noise" mode="overlay" />
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#g2)" />
+  <g filter="url(#turb)" opacity="0.16">
+    <rect width="100%" height="100%" fill="#ffffff" />
+  </g>
+  <!-- distant soft shapes like out-of-focus buildings/rocks -->
+  <g fill="#29414b" opacity="0.25">
+    <ellipse cx="600" cy="620" rx="420" ry="120" />
+    <ellipse cx="1500" cy="660" rx="520" ry="160" />
+  </g>
+</svg>

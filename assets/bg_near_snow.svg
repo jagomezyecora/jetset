@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="900" viewBox="0 0 2400 900" preserveAspectRatio="xMidYMid slice">
+  <rect width="100%" height="100%" fill="#a9c6d2" />
+  <g opacity="0.32" fill="#dfeff6">
+    <ellipse cx="400" cy="760" rx="260" ry="70" />
+    <ellipse cx="1000" cy="760" rx="320" ry="80" />
+    <ellipse cx="1800" cy="740" rx="300" ry="90" />
+  </g>
+</svg>

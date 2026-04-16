@@ -1,0 +1,15 @@
+{
+  "title": "JetSet — Prototype",
+  "start": "Start Level 1",
+  "levelEditor": "Level Editor",
+  "credits": "Prototype — Controls: arrows / touch",
+  "variant": "Variant",
+  "bloom": "Bloom",
+  "prototypeInstructions": "Prototype: move with arrows or touch areas",
+  "jump": "JUMP",
+  "bloom_preset_soft": "SOFT",
+  "bloom_preset_strong": "STRONG",
+  "language": "Language",
+  "lang_en": "EN",
+  "lang_es": "ES"
+}

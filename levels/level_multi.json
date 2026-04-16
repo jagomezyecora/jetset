@@ -1,0 +1,34 @@
+{
+  "screens": [
+    {
+      "id": "screen_0",
+      "playerStart": { "x": 120, "y": 440 },
+      "platforms": [
+        { "x": 0, "y": 520, "width": 800, "height": 56 }
+      ],
+      "items": [ { "x": 540, "y": 460 } ],
+      "variant": "day"
+    },
+    {
+      "id": "screen_1",
+      "playerStart": { "x": 80, "y": 440 },
+      "platforms": [
+        { "x": 0, "y": 520, "width": 380, "height": 56 },
+        { "x": 420, "y": 460, "width": 280, "height": 40 }
+      ],
+      "items": [ { "x": 460, "y": 420 }, { "x": 300, "y": 420 } ],
+      "variant": "night"
+    },
+    {
+      "id": "screen_2",
+      "playerStart": { "x": 80, "y": 440 },
+      "platforms": [
+        { "x": 0, "y": 520, "width": 360, "height": 56 },
+        { "x": 380, "y": 480, "width": 420, "height": 56 }
+      ],
+      "items": [ { "x": 640, "y": 420 } ],
+      "variant": "snow"
+    }
+  ],
+  "startScreen": 0
+}

@@ -1,0 +1,39 @@
+{
+  "type": "labyrinth",
+  "startId": "r1c1",
+  "screens": {
+    "r1c1": { "id": "r1c1", "neighbors": { "right": "r1c2", "down": "r2c1" }, "playerStart": { "x": 120, "y": 440 }, "variant": "day", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [{ "x": 420, "y": 480 }], "enemies": [{ "x": 600, "y": 480, "patrolRange": 120, "speed": 60 }] },
+
+    "r1c2": { "id": "r1c2", "neighbors": { "left": "r1c1", "right": "r1c3", "down": "r2c2" }, "playerStart": { "x": 80, "y": 440 }, "variant": "day", "platforms": [{ "x": 0, "y": 520, "width": 380, "height": 56 }, { "x": 420, "y": 460, "width": 280, "height": 40 }], "items": [{ "x": 300, "y": 420 }], "enemies": [] },
+
+    "r1c3": { "id": "r1c3", "neighbors": { "left": "r1c2", "right": "r1c4", "down": "r2c3" }, "playerStart": { "x": 120, "y": 440 }, "variant": "night", "platforms": [{ "x": 0, "y": 520, "width": 360, "height": 56 }, { "x": 380, "y": 480, "width": 420, "height": 56 }], "items": [{ "x": 640, "y": 420 }], "enemies": [{ "x": 200, "y": 440, "patrolRange": 160, "speed": 80 }] },
+
+    "r1c4": { "id": "r1c4", "neighbors": { "left": "r1c3", "right": "r1c5", "down": "r2c4" }, "playerStart": { "x": 120, "y": 440 }, "variant": "night", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [], "enemies": [] },
+
+    "r1c5": { "id": "r1c5", "neighbors": { "left": "r1c4", "down": "r2c5" }, "playerStart": { "x": 120, "y": 440 }, "variant": "night", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [], "enemies": [{ "x": 380, "y": 440, "patrolRange": 200, "speed": 100 }] },
+
+    "r2c1": { "id": "r2c1", "neighbors": { "up": "r1c1", "right": "r2c2", "down": "r3c1" }, "playerStart": { "x": 120, "y": 420 }, "variant": "day", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [] , "enemies": []},
+    "r2c2": { "id": "r2c2", "neighbors": { "up": "r1c2", "left": "r2c1", "right": "r2c3", "down": "r3c2" }, "playerStart": { "x": 120, "y": 420 }, "variant": "night", "platforms": [{ "x": 100, "y": 480, "width": 200, "height": 32 }, { "x": 420, "y": 460, "width": 280, "height": 40 }], "items": [{ "x": 200, "y": 420 }, { "x": 520, "y": 420 }], "enemies": [{ "x": 520, "y": 420, "patrolRange": 100, "speed": 60 }] },
+    "r2c3": { "id": "r2c3", "neighbors": { "up": "r1c3", "left": "r2c2", "right": "r2c4", "down": "r3c3" }, "playerStart": { "x": 120, "y": 420 }, "variant": "night", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [], "enemies": [] },
+    "r2c4": { "id": "r2c4", "neighbors": { "up": "r1c4", "left": "r2c3", "right": "r2c5", "down": "r3c4" }, "playerStart": { "x": 120, "y": 420 }, "variant": "night", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [], "enemies": [] },
+    "r2c5": { "id": "r2c5", "neighbors": { "up": "r1c5", "left": "r2c4", "down": "r3c5" }, "playerStart": { "x": 120, "y": 420 }, "variant": "day", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [], "enemies": [] },
+
+    "r3c1": { "id": "r3c1", "neighbors": { "up": "r2c1", "right": "r3c2", "down": "r4c1" }, "playerStart": { "x": 120, "y": 420 }, "variant": "snow", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [], "enemies": [] },
+    "r3c2": { "id": "r3c2", "neighbors": { "up": "r2c2", "left": "r3c1", "right": "r3c3", "down": "r4c2" }, "playerStart": { "x": 120, "y": 420 }, "variant": "snow", "platforms": [{ "x": 60, "y": 500, "width": 260, "height": 40 }, { "x": 420, "y": 480, "width": 260, "height": 40 }], "items": [{ "x": 300, "y": 440 }], "enemies": [{ "x": 520, "y": 440, "patrolRange": 140, "speed": 70 }] },
+    "r3c3": { "id": "r3c3", "neighbors": { "up": "r2c3", "left": "r3c2", "right": "r3c4", "down": "r4c3" }, "playerStart": { "x": 120, "y": 420 }, "variant": "snow", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [], "enemies": [] },
+    "r3c4": { "id": "r3c4", "neighbors": { "up": "r2c4", "left": "r3c3", "right": "r3c5", "down": "r4c4" }, "playerStart": { "x": 120, "y": 420 }, "variant": "snow", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [], "enemies": [] },
+    "r3c5": { "id": "r3c5", "neighbors": { "up": "r2c5", "left": "r3c4", "down": "r4c5" }, "playerStart": { "x": 120, "y": 420 }, "variant": "day", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [], "enemies": [] },
+
+    "r4c1": { "id": "r4c1", "neighbors": { "up": "r3c1", "right": "r4c2", "down": "r5c1" }, "playerStart": { "x": 120, "y": 420 }, "variant": "day", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [] , "enemies": []},
+    "r4c2": { "id": "r4c2", "neighbors": { "up": "r3c2", "left": "r4c1", "right": "r4c3", "down": "r5c2" }, "playerStart": { "x": 120, "y": 420 }, "variant": "day", "platforms": [{ "x": 100, "y": 480, "width": 200, "height": 32 }], "items": [], "enemies": [] },
+    "r4c3": { "id": "r4c3", "neighbors": { "up": "r3c3", "left": "r4c2", "right": "r4c4", "down": "r5c3" }, "playerStart": { "x": 120, "y": 420 }, "variant": "night", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [], "enemies": [{ "x": 240, "y": 440, "patrolRange": 160, "speed": 60 }] },
+    "r4c4": { "id": "r4c4", "neighbors": { "up": "r3c4", "left": "r4c3", "right": "r4c5", "down": "r5c4" }, "playerStart": { "x": 120, "y": 420 }, "variant": "night", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [], "enemies": [] },
+    "r4c5": { "id": "r4c5", "neighbors": { "up": "r3c5", "left": "r4c4", "down": "r5c5" }, "playerStart": { "x": 120, "y": 420 }, "variant": "day", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [], "enemies": [] },
+
+    "r5c1": { "id": "r5c1", "neighbors": { "up": "r4c1", "right": "r5c2" }, "playerStart": { "x": 120, "y": 420 }, "variant": "snow", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [], "enemies": [] },
+    "r5c2": { "id": "r5c2", "neighbors": { "up": "r4c2", "left": "r5c1", "right": "r5c3" }, "playerStart": { "x": 120, "y": 420 }, "variant": "snow", "platforms": [{ "x": 60, "y": 500, "width": 260, "height": 40 }], "items": [], "enemies": [] },
+    "r5c3": { "id": "r5c3", "neighbors": { "up": "r4c3", "left": "r5c2", "right": "r5c4" }, "playerStart": { "x": 120, "y": 420 }, "variant": "day", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [], "enemies": [] },
+    "r5c4": { "id": "r5c4", "neighbors": { "up": "r4c4", "left": "r5c3", "right": "r5c5" }, "playerStart": { "x": 120, "y": 420 }, "variant": "day", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [], "enemies": [] },
+    "r5c5": { "id": "r5c5", "neighbors": { "up": "r4c5", "left": "r5c4" }, "playerStart": { "x": 120, "y": 420 }, "variant": "day", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [], "enemies": [{ "x": 640, "y": 440, "patrolRange": 80, "speed": 80 }] }
+  }
+}

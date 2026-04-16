@@ -1,0 +1,7 @@
+{
+  "screens": [
+    { "id": "e2_s0", "playerStart": { "x": 140, "y": 420 }, "variant": "night", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }, { "x": 260, "y": 440, "width": 120, "height": 24 }], "items": [{ "x": 260, "y": 400 }] },
+    { "id": "e2_s1", "playerStart": { "x": 120, "y": 420 }, "variant": "day", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }, { "x": 520, "y": 460, "width": 180, "height": 32 }], "items": [{ "x": 560, "y": 420 }] }
+  ],
+  "startScreen": 0
+}

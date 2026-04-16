@@ -1,0 +1,17 @@
+{
+  "type": "labyrinth",
+  "startId": "r1c1",
+  "screens": {
+    "r1c1": { "id": "r1c1", "neighbors": { "right": "r1c2", "down": "r2c1" }, "playerStart": { "x": 120, "y": 440 }, "variant": "day", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [{ "x": 420, "y": 480 }] },
+    "r1c2": { "id": "r1c2", "neighbors": { "left": "r1c1", "right": "r1c3", "down": "r2c2" }, "playerStart": { "x": 80, "y": 440 }, "variant": "day", "platforms": [{ "x": 0, "y": 520, "width": 380, "height": 56 }, { "x": 420, "y": 460, "width": 280, "height": 40 }], "items": [{ "x": 300, "y": 420 }] },
+    "r1c3": { "id": "r1c3", "neighbors": { "left": "r1c2", "down": "r2c3" }, "playerStart": { "x": 80, "y": 440 }, "variant": "night", "platforms": [{ "x": 0, "y": 520, "width": 360, "height": 56 }, { "x": 380, "y": 480, "width": 420, "height": 56 }], "items": [{ "x": 640, "y": 420 }] },
+
+    "r2c1": { "id": "r2c1", "neighbors": { "up": "r1c1", "right": "r2c2", "down": "r3c1" }, "playerStart": { "x": 120, "y": 420 }, "variant": "day", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [] },
+    "r2c2": { "id": "r2c2", "neighbors": { "up": "r1c2", "left": "r2c1", "right": "r2c3", "down": "r3c2" }, "playerStart": { "x": 120, "y": 420 }, "variant": "night", "platforms": [{ "x": 100, "y": 480, "width": 200, "height": 32 }, { "x": 420, "y": 460, "width": 280, "height": 40 }], "items": [{ "x": 200, "y": 420 }, { "x": 520, "y": 420 }] },
+    "r2c3": { "id": "r2c3", "neighbors": { "up": "r1c3", "left": "r2c2", "down": "r3c3" }, "playerStart": { "x": 120, "y": 420 }, "variant": "night", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [] },
+
+    "r3c1": { "id": "r3c1", "neighbors": { "up": "r2c1", "right": "r3c2" }, "playerStart": { "x": 120, "y": 420 }, "variant": "snow", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [] },
+    "r3c2": { "id": "r3c2", "neighbors": { "up": "r2c2", "left": "r3c1", "right": "r3c3" }, "playerStart": { "x": 120, "y": 420 }, "variant": "snow", "platforms": [{ "x": 60, "y": 500, "width": 260, "height": 40 }, { "x": 420, "y": 480, "width": 260, "height": 40 }], "items": [{ "x": 300, "y": 440 }] },
+    "r3c3": { "id": "r3c3", "neighbors": { "up": "r2c3", "left": "r3c2" }, "playerStart": { "x": 120, "y": 420 }, "variant": "snow", "platforms": [{ "x": 0, "y": 520, "width": 800, "height": 56 }], "items": [{ "x": 640, "y": 420 }] }
+  }
+}

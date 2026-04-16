@@ -1,0 +1,15 @@
+{
+  "title": "JetSet — Prototipo",
+  "start": "Iniciar Nivel 1",
+  "levelEditor": "Editor de Nivel",
+  "credits": "Prototipo — Controles: flechas / táctil",
+  "variant": "Variante",
+  "bloom": "Bloom",
+  "prototypeInstructions": "Prototipo: muévete con las flechas o áreas táctiles",
+  "jump": "SALTAR",
+  "bloom_preset_soft": "SUAVE",
+  "bloom_preset_strong": "FUERTE",
+  "language": "Idioma",
+  "lang_en": "EN",
+  "lang_es": "ES"
+}

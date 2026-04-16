@@ -1,0 +1,15 @@
+{
+  "name": "Level 1",
+  "platforms": [
+    { "x": 400, "y": 560, "width": 800, "height": 48 },
+    { "x": 200, "y": 420, "width": 300, "height": 24 },
+    { "x": 600, "y": 320, "width": 220, "height": 24 },
+    { "x": 120, "y": 240, "width": 160, "height": 24 }
+  ],
+  "items": [
+    { "x": 200, "y": 380, "type": "collect" },
+    { "x": 600, "y": 280, "type": "collect" },
+    { "x": 120, "y": 200, "type": "collect" }
+  ],
+  "playerStart": { "x": 80, "y": 500 }
+}

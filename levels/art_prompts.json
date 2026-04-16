@@ -1,0 +1,51 @@
+{
+  "r1c1": {
+    "name": "Entrance Hall",
+    "description": "A cluttered Victorian entrance hall inspired by classic platformer rooms, with patterned tiled floor, narrow staircase to the left, tall windows, and scattered furniture. Photorealistic, modern color grading, cinematic lighting, warm tungsten highlights, soft film grain, high detail.",
+    "variants": {
+      "day": "Photorealistic modern interpretation of a Victorian entrance hall: patterned tiled floor, narrow staircase, tall windows with daylight, scattered vintage furniture, subtle dust motes, warm sunlight — ultra-detailed, 4k, cinematic lighting",
+      "night": "Photorealistic night version of the entrance hall: cool moonlight through windows, interior lamps casting warm pools, deeper shadows, reflective floor — ultra-detailed, 4k",
+      "snow": "Entrance hall with cold bluish ambient light and snowfall visible through the windows; crisp, frosty highlights, photorealistic, 4k"
+    }
+  },
+  "r1c2": {
+    "name": "Dining Room",
+    "description": "A long dining room with a large table, portraits on the wall, and mismatched chairs. Photorealistic, modern styling, warm ambient light, subtle cinematic contrast.",
+    "variants": {
+      "day": "Photorealistic dining room with sunlit table and textured wallpaper, modern cinematic look, 4k",
+      "night": "Dark dining room lit by candlelight and a chandelier, warm glows, deep shadows, photorealistic, 4k",
+      "snow": "Dining room with cold light, frost on window panes, muted palette, photorealistic, 4k"
+    }
+  },
+  "r1c3": {
+    "name": "Conservatory",
+    "description": "A glass conservatory with potted plants, metal framework, and a tiled path. Photorealistic, bright daylight, soft shadows, modern color grading.",
+    "variants": {
+      "day": "Sunlit conservatory with lush plants, reflective glass, photorealistic, 4k",
+      "night": "Moonlit conservatory with blue tone, interior lamps, reflective surfaces, photorealistic, 4k",
+      "snow": "Conservatory with snow settling on external frames, cold blue lighting, photorealistic, 4k"
+    }
+  },
+  "r1c4": { "name": "Library", "description": "A tall book-lined library with ladder rails, warm lamp light.", "variants": { "day": "Sunlit library with warm tones, high detail, 4k", "night": "Library lit by desk lamps, moody shadows, 4k", "snow": "Library with cool window light and slight frost, 4k" } },
+  "r1c5": { "name": "Lounge", "description": "A lounge with sofas and a fireplace, modern photoreal reinterpretation.", "variants": { "day": "Cozy lounge with natural light and modern materials, 4k", "night": "Firelit lounge with warm flicker and deep shadows, 4k", "snow": "Lounge with cool outdoor light and snowy window view, 4k" } },
+  "r2c1": { "name": "Kitchen", "description": "A cluttered kitchen with hanging pans and old stove.", "variants": { "day": "Sunlit kitchen with textures and modern photoreal finish, 4k", "night": "Dim kitchen with warm overhead lamp, 4k", "snow": "Kitchen with cold light and frosty window, 4k" } },
+  "r2c2": { "name": "Corridor", "description": "Narrow corridor with doors and patterned runner.", "variants": { "day": "Bright corridor with detailed textures, 4k", "night": "Shadowed corridor with spot lighting, 4k", "snow": "Corridor with cool ambient light, 4k" } },
+  "r2c3": { "name": "Bathroom", "description": "Vintage bathroom with clawfoot tub.", "variants": { "day": "Bathroom with soft daylight, photorealistic, 4k", "night": "Moody bathroom with dim light, 4k", "snow": "Bathroom with cold blue light, 4k" } },
+  "r2c4": { "name": "Study", "description": "A small study with desk and papers.", "variants": { "day": "Sunlit study, detailed textures, 4k", "night": "Study with desk lamp and warm shadows, 4k", "snow": "Study with frosty window light, 4k" } },
+  "r2c5": { "name": "Pantry", "description": "Storage pantry with shelves and jars.", "variants": { "day": "Well-lit pantry with detailed shelving, 4k", "night": "Dim pantry lighting, 4k", "snow": "Pantry with cool light, 4k" } },
+  "r3c1": { "name": "Basement", "description": "A darker basement space with crates.", "variants": { "day": "Basement with muted daylight bleed, 4k", "night": "Low-light basement with moody atmosphere, 4k", "snow": "Basement with cold outside light, 4k" } },
+  "r3c2": { "name": "Ballroom", "description": "Open ballroom with patterned floor and chandeliers.", "variants": { "day": "Ballroom with bright light and polished floor, 4k", "night": "Ballroom with chandelier glow, 4k", "snow": "Ballroom with blue-cold light, 4k" } },
+  "r3c3": { "name": "Gallery", "description": "Small gallery of paintings and sculptures.", "variants": { "day": "Gallery with natural light and detailed textures, 4k", "night": "Gallery with spotlights on art, 4k", "snow": "Gallery with cool ambient light, 4k" } },
+  "r3c4": { "name": "Conservatory Extension", "description": "A plant-filled extension space.", "variants": { "day": "Lush extension with bright daylight, 4k", "night": "Subdued extension with interior lamps, 4k", "snow": "Extension with snowy exterior view, 4k" } },
+  "r3c5": { "name": "Gallery Annex", "description": "Annex area with sculptures.", "variants": { "day": "Annex with soft daylight, 4k", "night": "Annex with moody lamp light, 4k", "snow": "Annex with cold window light, 4k" } },
+  "r4c1": { "name": "Servants Quarters", "description": "Simple bedrooms and bunks.", "variants": { "day": "Servants quarters with warm light, 4k", "night": "Dim quarters with soft lamps, 4k", "snow": "Cold light through windows, 4k" } },
+  "r4c2": { "name": "Storage", "description": "A storage room with crates and barrels.", "variants": { "day": "Storeroom with textures, 4k", "night": "Dark storeroom lit by a single bulb, 4k", "snow": "Storeroom with cold light, 4k" } },
+  "r4c3": { "name": "Upper Landing", "description": "Landing with ornate railing.", "variants": { "day": "Ornate landing with sunlight, 4k", "night": "Landing with soft night lamps, 4k", "snow": "Landing with frosty window light, 4k" } },
+  "r4c4": { "name": "Nursery", "description": "A nursery room with toys and small beds.", "variants": { "day": "Bright nursery with warm tones, 4k", "night": "Nursery lit by nightlight, 4k", "snow": "Nursery with cool light, 4k" } },
+  "r4c5": { "name": "Observatory", "description": "Small observatory tower with a window to the sky.", "variants": { "day": "Observatory with daylight and clear sky, 4k", "night": "Observatory with starlight, 4k", "snow": "Observatory with snowy exterior, 4k" } },
+  "r5c1": { "name": "Garden South", "description": "An outdoor garden area with hedges.", "variants": { "day": "Sunlit garden with hedges, 4k", "night": "Moonlit garden with cool tones, 4k", "snow": "Snow-covered garden, 4k" } },
+  "r5c2": { "name": "Greenhouse", "description": "A greenhouse with glass panes and plants.", "variants": { "day": "Bright greenhouse with lush plants, 4k", "night": "Greenhouse with warm interior lamps, 4k", "snow": "Greenhouse with frost outside, 4k" } },
+  "r5c3": { "name": "Stables", "description": "Stables with wooden stalls.", "variants": { "day": "Stables with warm daylight, 4k", "night": "Stables with dim lamps, 4k", "snow": "Stables with snowy exterior, 4k" } },
+  "r5c4": { "name": "Coach House", "description": "Coach house with carriage.", "variants": { "day": "Coach house with detailed textures, 4k", "night": "Coach house with low light, 4k", "snow": "Coach house with snow, 4k" } },
+  "r5c5": { "name": "Folly", "description": "A small garden folly, decorative structure.", "variants": { "day": "Folly with daylight and textured stone, 4k", "night": "Folly under moonlight, 4k", "snow": "Folly with snow cover, 4k" } }
+}
