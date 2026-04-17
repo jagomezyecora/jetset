@@ -1,14 +1,13 @@
 import './styles.css'
 import type Phaser from 'phaser'
-import MenuScene from './scenes/MenuScene'
-import MapScene from './scenes/MapScene'
+// Scenes are loaded dynamically to enable code-splitting
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   width: 800,
   height: 600,
   parent: 'app',
-  scene: [MenuScene, MapScene],
+  scene: [],
   resolution: window.devicePixelRatio || 1,
   render: {
     pixelArt: false,
@@ -35,21 +34,47 @@ const game = new Phaser.Game(config)
 try {
   const qs = new URLSearchParams(window.location.search)
   const sceneToOpen = qs.get('scene')
+  // whitelist known scene names to avoid dynamic-import-vars issues
+  const map: any = {
+    'MapScene': () => import('./scenes/MapScene'),
+    'MainScene': () => import('./scenes/MainScene'),
+    'MenuScene': () => import('./scenes/MenuScene'),
+    'EditorScene': () => import('./scenes/EditorScene')
+  }
+
   if (sceneToOpen) {
-    // whitelist known scene names to avoid dynamic-import-vars issues
-    const map: any = {
-      'MapScene': () => import('./scenes/MapScene'),
-      'MainScene': () => import('./scenes/MainScene'),
-      'MenuScene': () => import('./scenes/MenuScene'),
-      'EditorScene': () => import('./scenes/EditorScene')
-    }
     const loader = map[sceneToOpen]
     if (loader) {
-      loader().then((mod:any) => {
-        if (!game.scene.get(sceneToOpen)) game.scene.add(sceneToOpen, mod.default, false)
-        game.scene.start(sceneToOpen)
-      }).catch((e) => { console.warn('Failed to open scene from URL:', sceneToOpen, e) })
+      setTimeout(() => {
+        loader().then((mod:any) => {
+            try {
+              const hasGet = game.scene && typeof (game.scene as any).get === 'function'
+              if (hasGet) {
+                if (!game.scene.get(sceneToOpen)) game.scene.add(sceneToOpen, mod.default, false)
+              } else {
+                try { (game.scene as any).add(sceneToOpen, mod.default, false) } catch(e) {}
+              }
+              try { game.scene.start(sceneToOpen) } catch(e) {}
+            } catch(e) { console.warn('Failed to open scene from URL:', sceneToOpen, e) }
+          }).catch((e) => { console.warn('Failed to open scene from URL:', sceneToOpen, e) })
+      }, 0)
     }
+  } else {
+    // default behavior: dynamically load MenuScene and start it (defer to ensure SceneManager ready)
+    setTimeout(() => {
+      map['MenuScene']().then((mod:any) => {
+        try {
+          const hasGet = game.scene && typeof (game.scene as any).get === 'function'
+          if (hasGet) {
+            if (!game.scene.get('MenuScene')) game.scene.add('MenuScene', mod.default, false)
+          } else {
+            // fallback: attempt to add without checking
+            try { (game.scene as any).add('MenuScene', mod.default, false) } catch(e) {}
+          }
+          try { game.scene.start('MenuScene') } catch(e) {}
+        } catch(e) { console.warn('Failed to load MenuScene:', e) }
+      }).catch((e) => { console.warn('Failed to load MenuScene:', e) })
+    }, 0)
   }
 } catch(e) {}
 

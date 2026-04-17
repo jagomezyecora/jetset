@@ -1,0 +1,20 @@
+[
+  {
+    "kind": "console",
+    "type": "debug",
+    "text": "[vite] connecting...",
+    "timestamp": 1776409850341
+  },
+  {
+    "kind": "console",
+    "type": "debug",
+    "text": "[vite] connected.",
+    "timestamp": 1776409850359
+  },
+  {
+    "kind": "console",
+    "type": "log",
+    "text": "%c %c %c %c %c Phaser v3.60.0 (WebGL | Web Audio) %c https://phaser.io background: #ff0000 background: #ffff00 background: #00ff00 background: #00ffff color: #ffffff; background: #000000 background: transparent",
+    "timestamp": 1776409850461
+  }
+]
