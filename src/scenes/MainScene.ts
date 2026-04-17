@@ -650,8 +650,9 @@ export default class MainScene extends Phaser.Scene {
     const h = this.scale.height
 
     let dir = 0
-    if (this.cursors.left?.isDown) dir = -1
-    if (this.cursors.right?.isDown) dir = 1
+    if (!this.player) return
+    if (this.cursors?.left?.isDown) dir = -1
+    if (this.cursors?.right?.isDown) dir = 1
     if (this.moveDir !== 0) dir = this.moveDir
 
     // horizontal movement using arcade velocity
@@ -659,7 +660,7 @@ export default class MainScene extends Phaser.Scene {
 
     // jump when on ground
     const body = this.player.body as Phaser.Physics.Arcade.Body
-    if ((this.cursors.up?.isDown || this.isJumping) && body.blocked.down) {
+    if ((this.cursors?.up?.isDown || this.isJumping) && body.blocked.down) {
       this.player.setVelocityY(-350)
       this.isJumping = false
       try { (this as any).sfx && (this as any).sfx.jump && (this as any).sfx.jump.play() } catch(e){}
@@ -692,17 +693,18 @@ export default class MainScene extends Phaser.Scene {
     } else if (this.screensMap && this.currentScreenId) {
       const margin = 12
       const cur = this.screensMap[this.currentScreenId]
+      const neigh = cur?.neighbors || {}
       if (this.player.x < margin) {
-        const nid = cur?.neighbors?.left || cur?.neighbors?.west
+        const nid = neigh.left || neigh.west
         if (nid) this.changeScreenTo(nid)
       } else if (this.player.x > this.scale.width - margin) {
-        const nid = cur?.neighbors?.right || cur?.neighbors?.east
+        const nid = neigh.right || neigh.east
         if (nid) this.changeScreenTo(nid)
       } else if (this.player.y < margin) {
-        const nid = cur?.neighbors?.up || cur?.neighbors?.north
+        const nid = neigh.up || neigh.north
         if (nid) this.changeScreenTo(nid)
       } else if (this.player.y > this.scale.height - margin) {
-        const nid = cur?.neighbors?.down || cur?.neighbors?.south
+        const nid = neigh.down || neigh.south
         if (nid) this.changeScreenTo(nid)
       }
     }
