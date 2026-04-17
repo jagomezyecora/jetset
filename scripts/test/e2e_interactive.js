@@ -25,8 +25,10 @@ const fs = require('fs');
       return { x: r.left + r.width/2, y: r.top + r.height/2, left: r.left, top: r.top, width: r.width, height: r.height };
     });
     if (!rect) throw new Error('Canvas not found');
-    await page.mouse.click(rect.x, rect.y);
-    console.log('Clicked canvas center to start');
+    // click the Demo button (offset +56px from center)
+    const demoY = rect.y + 56
+    await page.mouse.click(rect.x, demoY);
+    console.log('Clicked Demo button (canvas) to start demo');
     await new Promise(r => setTimeout(r, 700));
 
     // Press right for 600ms, then jump, then left

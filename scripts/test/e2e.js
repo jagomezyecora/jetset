@@ -34,8 +34,10 @@ const fs = require('fs');
       return { x: r.left + r.width/2, y: r.top + r.height/2 };
     });
     if (rect) {
-      await page.mouse.click(rect.x, rect.y);
-      console.log('Clicked canvas center (attempt to press Start)');
+        // click Demo button area (offset +56px from center)
+        const demoY = rect.y + 56
+        await page.mouse.click(rect.x, demoY);
+        console.log('Clicked Demo button (canvas) to start demo');
       // wait for scene change
       await new Promise(r => setTimeout(r, 800));
       const mainActive = await page.evaluate(() => {
