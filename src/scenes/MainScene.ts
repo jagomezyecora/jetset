@@ -583,21 +583,27 @@ export default class MainScene extends Phaser.Scene {
     // create a particle emitter when available, otherwise fall back to a lightweight emitter implementation
     let emitter: any = null
     try {
-      const particlesMgr: any = this.add.particles('particle_white')
-      if (particlesMgr && typeof particlesMgr.createEmitter === 'function') {
-        emitter = particlesMgr.createEmitter({
-          speed: { min: -80, max: 80 },
-          scale: { start: 0.8, end: 0 },
-          alpha: { start: 0.9, end: 0 },
-          lifespan: 600,
-          quantity: 6,
-          blendMode: 'ADD'
-        })
-      } else {
-        throw new Error('createEmitter not available')
+      // Avoid creating the old ParticleEmitterManager on Phaser 3.60+ because it was removed
+      const phVer = (Phaser as any).VERSION || ''
+      const forceFallback = phVer.startsWith && phVer.startsWith('3.60')
+      if (!forceFallback) {
+        const particlesMgr: any = this.add.particles('particle_white')
+        if (particlesMgr && typeof particlesMgr.createEmitter === 'function') {
+          emitter = particlesMgr.createEmitter({
+            speed: { min: -80, max: 80 },
+            scale: { start: 0.8, end: 0 },
+            alpha: { start: 0.9, end: 0 },
+            lifespan: 600,
+            quantity: 6,
+            blendMode: 'ADD'
+          })
+        }
       }
     } catch (e) {
-      // fallback lightweight emitter: create small circles and tween them out
+      // fallthrough to fallback below
+    }
+    // If we couldn't create a native emitter (or we're on Phaser 3.60+), use a lightweight fallback
+    if (!emitter) {
       emitter = {
         emitParticleAt: (x: number, y: number, qty = 6) => {
           for (let i = 0; i < qty; i++) {
