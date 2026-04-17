@@ -18,6 +18,10 @@ export default class MainScene extends Phaser.Scene {
     super({ key: 'MainScene' })
   }
 
+  init(data: any) {
+    ;(this as any)._demo = !!(data && data.demo)
+  }
+
   // Ensure a texture is loaded; returns a promise that resolves when available
   private ensureTexture(key: string, url: string) {
     return new Promise<void>((resolve) => {
@@ -333,20 +337,24 @@ export default class MainScene extends Phaser.Scene {
     // apply initially
     applyPreset(preset)
 
-    // create platforms from level JSON (use groundImg)
+    // initialize containers for platforms/items early so platform creation works
+    ;(this as any).platformBodies = []
+    ;(this as any).itemObjects = []
+    ;(this as any).neighborButtons = []
+
+    // create platforms from level JSON (use generated 'ground' texture)
     ;console.log('MainScene: creating platforms')
     const level = this.cache.json.get('level1') as any
 
     if (level && level.platforms) {
       level.platforms.forEach((p: any) => {
-        const img = this.add.image(p.x, p.y, 'groundImg')
+        const img = this.add.image(p.x, p.y, 'ground')
         img.setDisplaySize(p.width, p.height)
         img.setOrigin(0.5, 0.5)
+        img.setDepth(5)
         this.physics.add.existing(img, true)
         ;(this as any).platformBodies.push(img)
       })
-      // ensure player collides with created platforms
-      try { this.physics.add.collider(this.player, (this as any).platformBodies || []) } catch(e) {}
     }
       // multi-screen level support: check for labyrinth map first, then array maps
       const labFull = this.cache.json.get('level_labyrinth_full') as any
@@ -362,11 +370,6 @@ export default class MainScene extends Phaser.Scene {
         this.screensMap = null
         this.currentScreenId = null
       }
-      // containers for platforms/items so we can clear them between screens
-      ;(this as any).platformBodies = []
-      ;(this as any).itemObjects = []
-      ;(this as any).neighborButtons = []
-
       if (this.screens) {
         this.loadScreen(this.currentScreen)
       } else if (this.screensMap) {
@@ -477,6 +480,8 @@ export default class MainScene extends Phaser.Scene {
     this.player.setCollideWorldBounds(true)
     this.player.setBounce(0.08)
     ;(this as any).player.hp = 5
+    // ensure player collides with static platforms created earlier
+    try { this.physics.add.collider(this.player, (this as any).platformBodies || []) } catch(e) {}
     // fallback to a generated glossy texture if player frames failed to create
     try {
       if (!this.textures.exists(playerKey0)) {
@@ -651,6 +656,10 @@ export default class MainScene extends Phaser.Scene {
 
     let dir = 0
     if (!this.player) return
+    // Demo autoplay mode: move right and transition screens automatically
+    if ((this as any)._demo) {
+      dir = 1
+    }
     if (this.cursors?.left?.isDown) dir = -1
     if (this.cursors?.right?.isDown) dir = 1
     if (this.moveDir !== 0) dir = this.moveDir
@@ -689,6 +698,10 @@ export default class MainScene extends Phaser.Scene {
         this.changeScreen(-1)
       } else if (this.player.x > this.scale.width - margin) {
         this.changeScreen(1)
+      }
+      // if demo, auto-warp to next screen when near edge
+      if ((this as any)._demo && this.player.x > this.scale.width - margin) {
+        try { this.changeScreen(1) } catch(e){}
       }
     } else if (this.screensMap && this.currentScreenId) {
       const margin = 12
@@ -881,7 +894,7 @@ export default class MainScene extends Phaser.Scene {
     }
 
     // create platforms
-    if (s.platforms) {
+      if (s.platforms) {
       s.platforms.forEach((p: any) => {
         const px = (p.x || 0)
         // try to create a photoreal ground texture for this platform size from the near background
@@ -904,9 +917,10 @@ export default class MainScene extends Phaser.Scene {
           }
         } catch (e) {}
 
-        const img = this.add.image(px + (p.width||0)/2, p.y, this.textures.exists(groundTex) ? groundTex : 'groundImg')
+        const img = this.add.image(px + (p.width||0)/2, p.y, this.textures.exists(groundTex) ? groundTex : 'ground')
         img.setDisplaySize(p.width, p.height)
         img.setOrigin(0.5, 0.5)
+        img.setDepth(5)
         this.physics.add.existing(img, true)
         ;(this as any).platformBodies.push(img)
       })

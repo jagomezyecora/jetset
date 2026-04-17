@@ -28,6 +28,21 @@ export default class MenuScene extends Phaser.Scene {
       }
     })
 
+    // Demo button: autoplay a short demo of screens and movement
+    const demoBtn = this.add.rectangle(w / 2, h / 2 + 56, 200, 44, 0xffa500).setInteractive()
+    this.add.text(w / 2, h / 2 + 56, t('demo') || 'DEMO', { font: '18px Arial', color: '#000' }).setOrigin(0.5)
+    demoBtn.on('pointerdown', async () => {
+      console.log('Menu: Demo pressed')
+      try {
+        const mod = await import('./MainScene')
+        if (!this.scene.get('MainScene')) this.scene.add('MainScene', mod.default, false)
+        // start main scene in demo mode
+        this.scene.start('MainScene', { demo: true })
+      } catch (err) {
+        console.error('Menu: Failed to start demo', err)
+      }
+    })
+
     const editorBtn = this.add.rectangle(w / 2, h / 2 + 96, 220, 52, 0x2ecc71).setInteractive()
     this.add.text(w / 2, h / 2 + 96, t('levelEditor'), { font: '18px Arial', color: '#fff' }).setOrigin(0.5)
     editorBtn.on('pointerdown', async () => {
