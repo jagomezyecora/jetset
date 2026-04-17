@@ -34,7 +34,7 @@ const puppeteer = require('puppeteer');
         const g = window.game;
         const sc = g.scene.getScene('MainScene');
         if (sc && sc.changeScreenTo) {
-          sc.changeScreenTo('r1c2')
+          if (typeof sc.gotoScreen === 'function') sc.gotoScreen('r1c2'); else sc.changeScreenTo('r1c2')
         }
       } catch(e) { console.log('change err', e) }
     });

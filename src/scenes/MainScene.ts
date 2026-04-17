@@ -774,9 +774,9 @@ export default class MainScene extends Phaser.Scene {
     if (this.screens) {
       const margin = 12
       if (this.player.x < margin) {
-        this.changeScreen(-1)
+        this.gotoScreen(-1)
       } else if (this.player.x > this.scale.width - margin) {
-        this.changeScreen(1)
+        this.gotoScreen(1)
       }
       // if demo, auto-warp to next screen when near edge
       if ((this as any)._demo && this.player.x > this.scale.width - margin) {
@@ -788,16 +788,16 @@ export default class MainScene extends Phaser.Scene {
       const neigh = cur?.neighbors || {}
       if (this.player.x < margin) {
         const nid = neigh.left || neigh.west
-        if (nid) this.changeScreenTo(nid)
+        if (nid) this.gotoScreen(nid)
       } else if (this.player.x > this.scale.width - margin) {
         const nid = neigh.right || neigh.east
-        if (nid) this.changeScreenTo(nid)
+        if (nid) this.gotoScreen(nid)
       } else if (this.player.y < margin) {
         const nid = neigh.up || neigh.north
-        if (nid) this.changeScreenTo(nid)
+        if (nid) this.gotoScreen(nid)
       } else if (this.player.y > this.scale.height - margin) {
         const nid = neigh.down || neigh.south
-        if (nid) this.changeScreenTo(nid)
+        if (nid) this.gotoScreen(nid)
       }
     }
 
@@ -864,6 +864,41 @@ export default class MainScene extends Phaser.Scene {
       ;(this as any)._screenChanging = false
     })
     this.cameras.main.fadeOut(220)
+  }
+
+  // Unified safe screen navigation helper. Accepts a numeric delta (for array-based screens)
+  // or a string id for map-based screens. Ensures single transition at a time and
+  // honors blocked screens (e.g., Master Bedroom blocked by Maria).
+  gotoScreen(target: string | number) {
+    if ((this as any)._screenChanging) return
+    try {
+      if (typeof target === 'number') {
+        // numeric delta: use existing changeScreen which handles fade and state
+        this.changeScreen(target)
+        return
+      }
+      // string id: prefer changeScreenTo when screensMap present
+      if (this.screensMap && this.screensMap[target as string]) {
+        this.changeScreenTo(target as string)
+        return
+      }
+      // if screens is an array and target is a parseable index, compute delta
+      const maybeIndex = parseInt(String(target), 10)
+      if (!isNaN(maybeIndex) && this.screens && typeof this.currentScreen === 'number') {
+        const delta = maybeIndex - (this.currentScreen as number)
+        this.changeScreen(delta)
+        return
+      }
+      // fallback: directly load screen by id if loadScreen accepts it
+      try {
+        // loadScreen handles blocked screens and clears previous contents
+        this.loadScreen(target as any)
+      } catch (e) {
+        console.warn('gotoScreen fallback loadScreen failed', e)
+      }
+    } catch (e) {
+      console.error('gotoScreen error', e)
+    }
   }
 
   async loadScreen(index: number | string) {
@@ -980,7 +1015,7 @@ export default class MainScene extends Phaser.Scene {
         if (dir === 'up' || dir === 'north') { x = w/2; y = 40; label = '▲' }
         if (dir === 'down' || dir === 'south') { x = w/2; y = h - 40; label = '▼' }
         const btn = this.add.text(x, y, label, { font: '20px Arial', color: '#fff', backgroundColor: 'rgba(0,0,0,0.35)', padding: { x: 8, y: 6 } }).setInteractive()
-        btn.on('pointerdown', () => { try { this.changeScreenTo(tid as string) } catch(e){} })
+        btn.on('pointerdown', () => { try { this.gotoScreen(tid as string) } catch(e){} })
         ;(this as any).neighborButtons.push(btn)
       })
     }
