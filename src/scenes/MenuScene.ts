@@ -43,6 +43,15 @@ export default class MenuScene extends Phaser.Scene {
       }
     })
 
+    // Map button
+    const mapBtn = this.add.rectangle(w / 2, h / 2 + 112, 200, 44, 0x9b59b6).setInteractive()
+    this.add.text(w / 2, h / 2 + 112, t('map') || 'MAP', { font: '18px Arial', color: '#fff' }).setOrigin(0.5)
+    mapBtn.on('pointerdown', async () => {
+      const mod = await import('./MapScene')
+      if (!this.scene.get('MapScene')) this.scene.add('MapScene', mod.default, false)
+      this.scene.start('MapScene')
+    })
+
     const editorBtn = this.add.rectangle(w / 2, h / 2 + 96, 220, 52, 0x2ecc71).setInteractive()
     this.add.text(w / 2, h / 2 + 96, t('levelEditor'), { font: '18px Arial', color: '#fff' }).setOrigin(0.5)
     editorBtn.on('pointerdown', async () => {
