@@ -43,3 +43,22 @@ Cómo probar localmente
 3. `TEST_URL=http://localhost:5173/ npm run test:e2e` para ejecutar E2E
 
 Si quieres que añada revisores o etiquetas a esta PR, dímelo y lo hago.
+
+Detalles añadidos (actualizado):
+
+- Objetivo del PR: estabilizar la carga dinámica de escenas y eliminar errores de recursos faltantes que impedían ejecutar pruebas E2E repetibles. Además, proporcionar un generador de placeholders para que el equipo pueda iterar sin activos finales.
+- Qué incluye exactamente:
+	- `scripts/generate_public_placeholders.js`: generador Node que crea `public/assets/bg_*` y `public/assets/character_spritesheet.*` con imágenes de prueba de resolución real (no 1x1) y metadata JSON para animaciones.
+	- `public/assets/character_spritesheet.png`: spritesheet de 4 frames que representa un protagonista aproximado (hombre ~60 años, calvo, con tripita cervecera) para usar como placeholder visual.
+	- Capturas y logs en `scripts/logs/` que muestran ejecuciones E2E exitosas y estados de `MainScene` (por ejemplo: `itemsTotal = 83`, `masterBlocked = true`).
+
+- Consideraciones de calidad:
+	- Los placeholders son generados por código para evitar incluir arte final; si quieres, puedo reemplazarlos por imágenes artísticas más detalladas (requiere assets nuevos o integración con un pipeline de generación).
+	- La advertencia sobre `ParticleEmitterManager` viene de Phaser 3.60 — puedo refactorizar el código para usar la nueva API si deseas eliminar la advertencia en caliente.
+
+Checklist para merge (sugerida):
+- [ ] Revisar cambios en `src/scenes/MainScene.ts` (lógica de carga, HUD y desbloqueo de Master Bedroom).
+- [ ] Validar que `levels/level_labyrinth_full.json` sigue reportando `meta.totalItems = 83` y que la lógica de desbloqueo funciona al recolectar items en E2E.
+- [ ] (Opcional) Reemplazar placeholders por arte definitivo o añadir `git-lfs` si se van a subir archivos grandes.
+
+Si te parece bien, hago un pequeño comentario en el PR con este resumen y lo marco como `draft` o lo dejo listo para revisión — dime tu preferencia.
