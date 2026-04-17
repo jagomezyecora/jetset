@@ -52,6 +52,11 @@ Detalles añadidos (actualizado):
 	- `public/assets/character_spritesheet.png`: spritesheet de 4 frames que representa un protagonista aproximado (hombre ~60 años, calvo, con tripita cervecera) para usar como placeholder visual.
 	- Capturas y logs en `scripts/logs/` que muestran ejecuciones E2E exitosas y estados de `MainScene` (por ejemplo: `itemsTotal = 83`, `masterBlocked = true`).
 
+	- Nuevos placeholders de habitaciones y scripts:
+		- `scripts/generate_room_placeholders.js`: genera 8 imágenes de habitación placeholder en `public/assets/rooms/`.
+		- `scripts/link_room_assets.js`: copia las imágenes generadas como `bg_near_{roomId}_{variant}.png` en `public/assets/` para que `MainScene` las cargue automáticamente.
+		- Archivos generados: `public/assets/rooms/room_00.png` … `room_07.png` y `public/assets/bg_near_room_{XX}_*.png`.
+
 - Consideraciones de calidad:
 	- Los placeholders son generados por código para evitar incluir arte final; si quieres, puedo reemplazarlos por imágenes artísticas más detalladas (requiere assets nuevos o integración con un pipeline de generación).
 	- La advertencia sobre `ParticleEmitterManager` viene de Phaser 3.60 — puedo refactorizar el código para usar la nueva API si deseas eliminar la advertencia en caliente.
