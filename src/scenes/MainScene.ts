@@ -188,7 +188,7 @@ export default class MainScene extends Phaser.Scene {
   async create() {
     try {
       // wrap create in try/catch to surface errors during scene initialization
-      
+      console.log('MainScene: create start')
     
     const w = this.scale.width
     const h = this.scale.height
@@ -234,12 +234,44 @@ export default class MainScene extends Phaser.Scene {
     tsNear.setOrigin(0)
     tsNear.setScrollFactor(0)
     ;(this as any).bgNear = tsNear;
+    console.log('MainScene: background tileSprites created')
 
     // apply subtle tint/overlay to match game palette
     ;((this as any).bgFar as Phaser.GameObjects.TileSprite).setTint(0x22303a)
     ;((this as any).bgMid as Phaser.GameObjects.TileSprite).setTint(0x2a3b44)
     ;((this as any).bgNear as Phaser.GameObjects.TileSprite).setTint(0x384f59)
     ;console.log('MainScene: tints applied')
+
+    // Pre-generate simple placeholder textures for bg variants to avoid 404s
+    try {
+      const variants = ['day', 'night', 'snow']
+      variants.forEach(v => {
+        const farKey = `bg_far_${v}`
+        const midKey = `bg_mid_${v}`
+        const nearKey = `bg_near_${v}`
+        if (!this.textures.exists(farKey)) {
+          const g1 = this.add.graphics()
+          g1.fillStyle(v === 'night' ? 0x06121a : v === 'snow' ? 0xe6f5fa : 0x22303a, 1)
+          g1.fillRect(0, 0, Math.max(800, this.scale.width), Math.max(200, Math.round(this.scale.height * 0.6)))
+          g1.generateTexture(farKey, Math.max(800, this.scale.width), Math.max(200, Math.round(this.scale.height * 0.6)))
+          g1.destroy()
+        }
+        if (!this.textures.exists(midKey)) {
+          const g2 = this.add.graphics()
+          g2.fillStyle(v === 'night' ? 0x071922 : v === 'snow' ? 0xdbeef5 : 0x2a3b44, 1)
+          g2.fillRect(0, 0, Math.max(800, this.scale.width), Math.max(200, Math.round(this.scale.height * 0.5)))
+          g2.generateTexture(midKey, Math.max(800, this.scale.width), Math.max(200, Math.round(this.scale.height * 0.5)))
+          g2.destroy()
+        }
+        if (!this.textures.exists(nearKey)) {
+          const g3 = this.add.graphics()
+          g3.fillStyle(v === 'night' ? 0x0f2430 : v === 'snow' ? 0xcfe6ef : 0x384f59, 1)
+          g3.fillRect(0, 0, Math.max(800, this.scale.width), Math.max(200, Math.round(this.scale.height * 0.4)))
+          g3.generateTexture(nearKey, Math.max(800, this.scale.width), Math.max(200, Math.round(this.scale.height * 0.4)))
+          g3.destroy()
+        }
+      })
+    } catch (e) {}
 
     // create a DOM blurred image behind the canvas to act as bloom
     try {
@@ -363,6 +395,7 @@ export default class MainScene extends Phaser.Scene {
     ;(this as any).platformBodies = []
     ;(this as any).itemObjects = []
     ;(this as any).neighborButtons = []
+    console.log('MainScene: containers initialized')
 
     // create platforms from level JSON (use generated 'ground' texture)
     ;console.log('MainScene: creating platforms')
@@ -388,9 +421,19 @@ export default class MainScene extends Phaser.Scene {
       // multi-screen level support: check for labyrinth map first, then array maps
       const labFull = this.cache.json.get('level_labyrinth_full') as any
       const lab = labFull || this.cache.json.get('level_labyrinth') as any
+      // (labyrinth handling will run after player exists)
       if (lab && lab.type === 'labyrinth' && lab.screens) {
         this.screensMap = lab.screens
         this.currentScreenId = lab.startId || Object.keys(lab.screens)[0]
+        // compute total items for this labyrinth and initialize counters
+        try {
+          let tot = 0
+          Object.values(lab.screens).forEach((ss: any) => { if (ss.items && Array.isArray(ss.items)) tot += ss.items.length })
+          ;(this as any).itemsTotal = (lab.meta && lab.meta.totalItems) ? lab.meta.totalItems : tot
+          ;(this as any).itemsCollected = 0
+          ;(this as any)._masterBlocked = Object.values(lab.screens).some((ss: any) => ss.blockedByMaria)
+          console.log('MainScene: labyrinth totalItems=', (this as any).itemsTotal)
+        } catch(e) {}
         this.screens = null
       } else {
         const multi = this.cache.json.get('level_multi') as any
@@ -399,11 +442,11 @@ export default class MainScene extends Phaser.Scene {
         this.screensMap = null
         this.currentScreenId = null
       }
+      // player creation moved below
       if (this.screens) {
-        this.loadScreen(this.currentScreen)
+        // will be handled after player creation
       } else if (this.screensMap) {
-        // load the starting screen id for labyrinth style maps
-        this.loadScreen(this.currentScreenId as any)
+        // will be handled after player creation
       } else {
         // fallback to single-level behavior
         const level = this.cache.json.get('level1') as any
@@ -419,7 +462,7 @@ export default class MainScene extends Phaser.Scene {
 
     // player (physics sprite) - generate a glossy modern sprite to simulate polished art
     ;console.log('MainScene: creating player')
-    const start = level?.playerStart || { x: 100, y: h - 100 }
+    const start = level?.playerStart || { x: 100, y: this.scale.height - 100 }
     // generate a rounded rect base and add a subtle sheen for gloss
     const pG = this.add.graphics()
     const radiusW = 32
@@ -432,147 +475,88 @@ export default class MainScene extends Phaser.Scene {
     pG.generateTexture('player_gloss', radiusW, radiusH)
     pG.clear()
 
-    // create a simple animated player using sampled photo placeholders
+    // create a simple animated player using sampled photo placeholders or generated frames
     const idStrStart = (this.currentScreenId) ? this.currentScreenId : String(this.currentScreen)
     const vStart = (localStorage.getItem('bgVariant') || 'day')
     const sampleKeyStart = this.textures.exists('bg_near_' + idStrStart + '_' + vStart) ? ('bg_near_' + idStrStart + '_' + vStart) : (this.textures.exists('bg_near_' + vStart) ? ('bg_near_' + vStart) : 'bg_near')
 
-    // Prefer a global spritesheet + JSON if present (generated by scripts)
+    // attempt to use spritesheet or generated frames (placeholder logic will create frames later if needed)
     let usedSheet = false
     let sheetKey = ''
     try {
-      // attempt to load meta JSON to learn the cell size and frame order
       await this.ensureJSON('character_sheet_meta', '/assets/character_spritesheet.json')
       const meta: any = this.cache.json.get?.('character_sheet_meta')
       if (meta && meta.meta && typeof meta.meta.cell === 'number') {
         const cell = meta.meta.cell
-        // load spritesheet using cell size
         await this.ensureSpritesheet('character_spritesheet', '/assets/character_spritesheet.png', cell, cell)
         if (this.textures.exists('character_spritesheet')) {
-          // build name->index map from JSON frames (ordered by y then x)
-          const framesMeta = meta.frames || {}
-          const ordered = Object.entries(framesMeta).map(([k, v]: any) => ({ name: k, x: v.frame.x, y: v.frame.y })).sort((a: any, b: any) => (a.y === b.y ? a.x - b.x : a.y - b.y))
-          const nameToIndex: any = {}
-          ordered.forEach((it: any, idx: number) => { nameToIndex[it.name] = idx })
-          // expose mapping for runtime frame selection (jump start/air/fall)
-          ;(this as any).characterFrameMap = nameToIndex
-          ;(this as any).characterSheetKey = 'character_spritesheet'
-          // create animations if meta contains animation lists
-          const anims = (meta.meta && meta.meta.animations) || {}
-          try {
-            if (anims.idle && !this.anims.exists('player_idle')) {
-              this.anims.create({ key: 'player_idle', frames: anims.idle.map((n: any) => ({ key: 'character_spritesheet', frame: nameToIndex[n] })), frameRate: 6, repeat: -1 })
-            }
-            if (anims.walk && !this.anims.exists('player_walk')) {
-              this.anims.create({ key: 'player_walk', frames: anims.walk.map((n: any) => ({ key: 'character_spritesheet', frame: nameToIndex[n] })), frameRate: 12, repeat: -1 })
-            }
-            if (anims.jump && !this.anims.exists('player_jump')) {
-              this.anims.create({ key: 'player_jump', frames: anims.jump.map((n: any) => ({ key: 'character_spritesheet', frame: nameToIndex[n] })), frameRate: 8, repeat: 0 })
-            }
-          } catch (e) {}
           usedSheet = true
           sheetKey = 'character_spritesheet'
         }
       }
     } catch (e) {}
 
-    // fallback: per-screen generated sheet name
-    const sheetName = `player_sheet_${idStrStart}_${vStart}`
+    // fallback: per-screen generated sheet name will be tried later; if not, make frames on the fly
+    
+    // create placeholder frames if no sheet used
+    const makePlayerFramesLater = (idStr: string, v: string) => {
+      const frames: any[] = []
+      for (let i = 0; i < 4; i++) {
+        const key = `player_frame_${idStr}_${v}_${i}`
+        if (!this.textures.exists(key)) {
+          const rt = this.make.renderTexture({ width: 28, height: 44, add: false })
+          const g = this.make.graphics({ add: false })
+          g.fillStyle(0xf1c27d, 1)
+          g.fillCircle(14, 12, 8) // head
+          g.fillStyle(0xd9b38c, 1)
+          g.fillEllipse(14, 34, 18, 12) // belly
+          // eyes
+          g.fillStyle(0x000000, 1)
+          g.fillCircle(11, 12, 1)
+          g.fillCircle(17, 12, 1)
+          const dx = (i - 1.5) * 1.5
+          rt.draw(g, dx, 0)
+          g.destroy()
+          rt.saveTexture(key)
+          rt.destroy()
+        }
+        frames.push({ key })
+      }
+      return frames
+    }
+
+    // create the player sprite now (will use sheets or generated frames)
+    const playerFrames = makePlayerFramesLater(idStrStart, vStart)
+    const playerKey0 = playerFrames[0].key
+    this.player = this.physics.add.sprite(start.x, start.y, playerKey0)
+    try { this.player.setOrigin(0.5, 1) } catch(e) {}
     try {
-      const sheetPath = `/assets/${sheetName}.png`
-      await this.ensureSpritesheet(sheetName, sheetPath, 28, 44)
-      if (!usedSheet && this.textures.exists(sheetName)) {
-        usedSheet = true
-        sheetKey = sheetName
-        ;(this as any).characterSheetKey = sheetName
-        ;(this as any).characterFrameMap = null
+      if (!this.anims.exists('player_walk')) {
+        this.anims.create({ key: 'player_walk', frames: playerFrames, frameRate: 8, repeat: -1 })
+      }
+      this.player.play('player_walk')
+      if (!this.anims.exists('player_idle')) {
+        this.anims.create({ key: 'player_idle', frames: [ playerFrames[0] ], frameRate: 1, repeat: -1 })
+      }
+      if (!this.anims.exists('player_jump')) {
+        const jf = playerFrames[Math.min(2, playerFrames.length-1)]
+        this.anims.create({ key: 'player_jump', frames: [ jf ], frameRate: 1, repeat: 0 })
       }
     } catch (e) {}
-
-    if (usedSheet) {
-      this.player = this.physics.add.sprite(start.x, start.y, sheetKey || sheetName, 0)
-      try { this.player.setOrigin(0.5, 1) } catch(e) {}
-      // create animations for per-screen spritesheets or rely on JSON-created ones for global sheet
-      try {
-        if (sheetKey === 'character_spritesheet') {
-          // global sheet: animations created earlier from JSON if available
-          if (!this.anims.exists('player_walk')) {
-            // fallback to simple frame ranges if JSON lacked definitions
-            try { this.anims.create({ key: 'player_walk', frames: this.anims.generateFrameNumbers(sheetKey, { start: 0, end: 3 }), frameRate: 8, repeat: -1 }) } catch(e) {}
-          }
-        } else {
-          if (!this.anims.exists('player_walk')) {
-            this.anims.create({ key: 'player_walk', frames: this.anims.generateFrameNumbers(sheetKey, { start: 0, end: 3 }), frameRate: 8, repeat: -1 })
-          }
-          if (!this.anims.exists('player_idle')) {
-            this.anims.create({ key: 'player_idle', frames: [{ key: sheetKey, frame: 0 }], frameRate: 1, repeat: -1 })
-          }
-          if (!this.anims.exists('player_jump')) {
-            this.anims.create({ key: 'player_jump', frames: [{ key: sheetKey, frame: 2 }], frameRate: 1, repeat: 0 })
-          }
-        }
-      } catch(e) {}
-      try { this.player.play('player_walk') } catch(e) {}
-    } else {
-      const makePlayerFrames = (idStr: string, v: string, sampleKey: string) => {
-        const frames: any[] = []
-        for (let i = 0; i < 4; i++) {
-          const key = `player_frame_${idStr}_${v}_${i}`
-          if (!this.textures.exists(key)) {
-            try {
-              const rt = this.make.renderTexture({ width: 28, height: 44, add: false })
-              const tmp = this.make.image({ key: sampleKey, add: false })
-              tmp.setOrigin(0)
-              tmp.setDisplaySize(28, 44)
-              // apply small offset/tint per frame to simulate movement
-              tmp.setTintFill(Phaser.Display.Color.GetColor(255 - i * 6, 255 - i * 4, 255 - i * 3))
-              rt.draw(tmp, -i * 2, 0)
-              tmp.destroy()
-              rt.saveTexture(key)
-              rt.destroy()
-            } catch (e) {}
-          }
-          frames.push({ key })
-        }
-        return frames
-      }
-
-      const playerFrames = makePlayerFrames(idStrStart, vStart, sampleKeyStart)
-      const playerKey0 = playerFrames[0].key
-      this.player = this.physics.add.sprite(start.x, start.y, playerKey0)
-      try { this.player.setOrigin(0.5, 1) } catch(e) {}
-      try {
-        if (!this.anims.exists('player_walk')) {
-          this.anims.create({ key: 'player_walk', frames: playerFrames, frameRate: 8, repeat: -1 })
-        }
-        this.player.play('player_walk')
-        // idle and jump animations
-        if (!this.anims.exists('player_idle')) {
-          this.anims.create({ key: 'player_idle', frames: [ playerFrames[0] ], frameRate: 1, repeat: -1 })
-        }
-        if (!this.anims.exists('player_jump')) {
-          const jf = playerFrames[Math.min(2, playerFrames.length-1)]
-          this.anims.create({ key: 'player_jump', frames: [ jf ], frameRate: 1, repeat: 0 })
-        }
-      } catch (e) {}
-    }
     this.player.setDisplaySize(28, 44)
     this.player.setCollideWorldBounds(true)
     this.player.setBounce(0.08)
     ;(this as any).player.hp = 5
-    // ensure player collides with static platforms created earlier
-    try { this.physics.add.collider(this.player, (this as any).platformBodies || []) } catch(e) {}
-    // ensure player renders above platforms and background
-    try { this.player.setDepth(20) } catch(e) {}
-    // fallback to a generated glossy texture if player frames failed to create
-    try {
-      if (!this.textures.exists(playerKey0)) {
-        if (this.textures.exists('player_gloss')) {
-          this.player.setTexture('player_gloss')
-          this.player.setDisplaySize(radiusW, radiusH)
-        }
-      }
-    } catch (e) {}
+    console.log('MainScene: player created')
+
+    // now load screens if needed
+    if (this.screens) {
+      this.loadScreen(this.currentScreen)
+    } else if (this.screensMap) {
+      this.loadScreen(this.currentScreenId as any)
+    }
+
+
     // register animation if not exists
     try {
       if (!this.anims.exists('player_walk')) {
@@ -599,21 +583,27 @@ export default class MainScene extends Phaser.Scene {
     // create a particle emitter when available, otherwise fall back to a lightweight emitter implementation
     let emitter: any = null
     try {
-      const particlesMgr: any = this.add.particles('particle_white')
-      if (particlesMgr && typeof particlesMgr.createEmitter === 'function') {
-        emitter = particlesMgr.createEmitter({
-          speed: { min: -80, max: 80 },
-          scale: { start: 0.8, end: 0 },
-          alpha: { start: 0.9, end: 0 },
-          lifespan: 600,
-          quantity: 6,
-          blendMode: 'ADD'
-        })
-      } else {
-        throw new Error('createEmitter not available')
+      // Avoid creating the old ParticleEmitterManager on Phaser 3.60+ because it was removed
+      const phVer = (Phaser as any).VERSION || ''
+      const forceFallback = phVer.startsWith && phVer.startsWith('3.60')
+      if (!forceFallback) {
+        const particlesMgr: any = this.add.particles('particle_white')
+        if (particlesMgr && typeof particlesMgr.createEmitter === 'function') {
+          emitter = particlesMgr.createEmitter({
+            speed: { min: -80, max: 80 },
+            scale: { start: 0.8, end: 0 },
+            alpha: { start: 0.9, end: 0 },
+            lifespan: 600,
+            quantity: 6,
+            blendMode: 'ADD'
+          })
+        }
       }
     } catch (e) {
-      // fallback lightweight emitter: create small circles and tween them out
+      // fallthrough to fallback below
+    }
+    // If we couldn't create a native emitter (or we're on Phaser 3.60+), use a lightweight fallback
+    if (!emitter) {
       emitter = {
         emitParticleAt: (x: number, y: number, qty = 6) => {
           for (let i = 0; i < qty; i++) {
@@ -670,14 +660,27 @@ export default class MainScene extends Phaser.Scene {
         this.physics.add.overlap(this.player, c, () => {
           // particle burst when collected
           if (emitter) emitter.emitParticleAt(c.x, c.y, 12)
-            try { (this as any).sfx && (this as any).sfx.collect && (this as any).sfx.collect.play() } catch(e){}
-          c.destroy()
+          try { (this as any).sfx && (this as any).sfx.collect && (this as any).sfx.collect.play() } catch(e){}
+          try { c.destroy() } catch(e){}
+          try {
+            ;(this as any).itemsCollected = ((this as any).itemsCollected || 0) + 1
+            if ((this as any).itemsHud) {
+              (this as any).itemsHud.setText('Items: ' + (this as any).itemsCollected + ' / ' + ((this as any).itemsTotal || 0))
+            }
+            // unlock master bedroom if all collected
+            if ((this as any).itemsCollected >= ((this as any).itemsTotal || 0)) {
+              ;(this as any)._masterBlocked = false
+              try { Object.values((this as any).screensMap || {}).forEach((ss: any) => { if (ss.blockedByMaria) delete ss.blockedByMaria }) } catch(e) {}
+            }
+          } catch(e) {}
         })
       })
     }
 
     // HUD: player health
     ;(this as any).hud = this.add.text(10, 32, `HP: ${(this as any).player.hp}`, { font: '16px Arial', color: '#ffdddd' }).setDepth(20)
+    ;(this as any).itemsHud = this.add.text(10, 52, 'Items: 0 / ' + ((this as any).itemsTotal || 0), { font: '14px Arial', color: '#ffffaa' }).setDepth(20)
+    console.log('MainScene: HUD created')
 
     // keyboard
     this.cursors = this.input.keyboard.createCursorKeys()
@@ -777,9 +780,9 @@ export default class MainScene extends Phaser.Scene {
     if (this.screens) {
       const margin = 12
       if (this.player.x < margin) {
-        this.changeScreen(-1)
+        this.gotoScreen(-1)
       } else if (this.player.x > this.scale.width - margin) {
-        this.changeScreen(1)
+        this.gotoScreen(1)
       }
       // if demo, auto-warp to next screen when near edge
       if ((this as any)._demo && this.player.x > this.scale.width - margin) {
@@ -791,16 +794,16 @@ export default class MainScene extends Phaser.Scene {
       const neigh = cur?.neighbors || {}
       if (this.player.x < margin) {
         const nid = neigh.left || neigh.west
-        if (nid) this.changeScreenTo(nid)
+        if (nid) this.gotoScreen(nid)
       } else if (this.player.x > this.scale.width - margin) {
         const nid = neigh.right || neigh.east
-        if (nid) this.changeScreenTo(nid)
+        if (nid) this.gotoScreen(nid)
       } else if (this.player.y < margin) {
         const nid = neigh.up || neigh.north
-        if (nid) this.changeScreenTo(nid)
+        if (nid) this.gotoScreen(nid)
       } else if (this.player.y > this.scale.height - margin) {
         const nid = neigh.down || neigh.south
-        if (nid) this.changeScreenTo(nid)
+        if (nid) this.gotoScreen(nid)
       }
     }
 
@@ -869,6 +872,41 @@ export default class MainScene extends Phaser.Scene {
     this.cameras.main.fadeOut(220)
   }
 
+  // Unified safe screen navigation helper. Accepts a numeric delta (for array-based screens)
+  // or a string id for map-based screens. Ensures single transition at a time and
+  // honors blocked screens (e.g., Master Bedroom blocked by Maria).
+  gotoScreen(target: string | number) {
+    if ((this as any)._screenChanging) return
+    try {
+      if (typeof target === 'number') {
+        // numeric delta: use existing changeScreen which handles fade and state
+        this.changeScreen(target)
+        return
+      }
+      // string id: prefer changeScreenTo when screensMap present
+      if (this.screensMap && this.screensMap[target as string]) {
+        this.changeScreenTo(target as string)
+        return
+      }
+      // if screens is an array and target is a parseable index, compute delta
+      const maybeIndex = parseInt(String(target), 10)
+      if (!isNaN(maybeIndex) && this.screens && typeof this.currentScreen === 'number') {
+        const delta = maybeIndex - (this.currentScreen as number)
+        this.changeScreen(delta)
+        return
+      }
+      // fallback: directly load screen by id if loadScreen accepts it
+      try {
+        // loadScreen handles blocked screens and clears previous contents
+        this.loadScreen(target as any)
+      } catch (e) {
+        console.warn('gotoScreen fallback loadScreen failed', e)
+      }
+    } catch (e) {
+      console.error('gotoScreen error', e)
+    }
+  }
+
   async loadScreen(index: number | string) {
     let s: any = null
     if (typeof index === 'string') {
@@ -877,6 +915,19 @@ export default class MainScene extends Phaser.Scene {
       s = this.screens ? this.screens[index] : null
     }
     if (!s) return
+    const start = s.playerStart || { x: 120, y: this.scale.height - 160 }
+    // Blocked master bedroom check: if this screen is Maria-blocked and not all items collected, refuse to load
+    try {
+      const total = (this as any).itemsTotal || 0
+      const collected = (this as any).itemsCollected || 0
+      if (s.blockedByMaria && collected < total) {
+        try {
+          const warn = this.add.text(this.scale.width/2, this.scale.height/2, 'Maria blocks the door\nClean the mansion first', { font: '20px Arial', color: '#fff', backgroundColor: 'rgba(0,0,0,0.7)', align: 'center', padding: { x: 12, y: 12 } }).setOrigin(0.5).setDepth(60)
+          this.tweens.add({ targets: warn, alpha: 0, delay: 1500, duration: 800, onComplete: () => { try { warn.destroy() } catch(e){} } })
+        } catch(e){}
+        return
+      }
+    } catch(e) {}
     // clear previous platforms/items
     try {
       ;(this as any).platformBodies.forEach((b: any) => { try { if (b.gameObject) b.gameObject.destroy() } catch(e){} })
@@ -970,7 +1021,7 @@ export default class MainScene extends Phaser.Scene {
         if (dir === 'up' || dir === 'north') { x = w/2; y = 40; label = '▲' }
         if (dir === 'down' || dir === 'south') { x = w/2; y = h - 40; label = '▼' }
         const btn = this.add.text(x, y, label, { font: '20px Arial', color: '#fff', backgroundColor: 'rgba(0,0,0,0.35)', padding: { x: 8, y: 6 } }).setInteractive()
-        btn.on('pointerdown', () => { try { this.changeScreenTo(tid as string) } catch(e){} })
+        btn.on('pointerdown', () => { try { this.gotoScreen(tid as string) } catch(e){} })
         ;(this as any).neighborButtons.push(btn)
       })
     }
@@ -1014,7 +1065,7 @@ export default class MainScene extends Phaser.Scene {
         } catch(e) {}
         // filled overlay to ensure visibility on dark backgrounds
         try {
-          const fill = this.add.rectangle(px + (p.width||0)/2, p.y, p.width, p.height, 0x553322, 0.28)
+          const fill = this.add.rectangle(p.x + (p.width||0)/2, p.y, p.width, p.height, 0x553322, 0.28)
           fill.setOrigin(0.5)
           fill.setDepth(6)
         } catch(e) {}
@@ -1029,7 +1080,23 @@ export default class MainScene extends Phaser.Scene {
         const body = c.body as Phaser.Physics.Arcade.Body
         body.setAllowGravity(false)
         body.setImmovable(true)
-        this.physics.add.overlap(this.player, c, () => { try { c.destroy() } catch(e){} })
+        this.physics.add.overlap(this.player, c, () => {
+          try {
+            if (emitter) emitter.emitParticleAt(c.x, c.y, 12)
+            try { (this as any).sfx && (this as any).sfx.collect && (this as any).sfx.collect.play() } catch(e){}
+            c.destroy()
+          } catch(e){}
+          try {
+            ;(this as any).itemsCollected = ((this as any).itemsCollected || 0) + 1
+            if ((this as any).itemsHud) {
+              (this as any).itemsHud.setText('Items: ' + (this as any).itemsCollected + ' / ' + ((this as any).itemsTotal || 0))
+            }
+            if ((this as any).itemsCollected >= ((this as any).itemsTotal || 0)) {
+              ;(this as any)._masterBlocked = false
+              try { Object.values((this as any).screensMap || {}).forEach((ss: any) => { if (ss.blockedByMaria) delete ss.blockedByMaria }) } catch(e) {}
+            }
+          } catch(e) {}
+        })
         ;(this as any).itemObjects.push(c)
       })
     }
@@ -1077,7 +1144,6 @@ export default class MainScene extends Phaser.Scene {
     } catch (e) {}
 
     // position player
-    const start = s.playerStart || { x: 120, y: this.scale.height - 160 }
     this.player.x = start.x
     this.player.y = start.y
   }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="900" viewBox="0 0 2400 900" preserveAspectRatio="xMidYMid slice">
+  <rect width="100%" height="100%" fill="#071224" />
+  <g>
+    <circle cx="200" cy="120" r="60" fill="#e6f7ff" opacity="0.06"/>
+    <circle cx="2200" cy="80" r="30" fill="#e6f7ff" opacity="0.04"/>
+  </g>
+  <g fill="#cfe7ff" opacity="0.12">
+    <circle cx="400" cy="240" r="6" />
+    <circle cx="600" cy="100" r="3" />
+    <circle cx="1100" cy="60" r="4" />
+  </g>
+</svg>

@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "cell": 28,
+    "animations": {
+      "idle": [
+        "frame_0"
+      ],
+      "walk": [
+        "frame_0",
+        "frame_1",
+        "frame_2",
+        "frame_3"
+      ],
+      "jump": [
+        "frame_2"
+      ]
+    }
+  },
+  "frames": {
+    "frame_0": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 28,
+        "h": 44
+      }
+    },
+    "frame_1": {
+      "frame": {
+        "x": 28,
+        "y": 0,
+        "w": 28,
+        "h": 44
+      }
+    },
+    "frame_2": {
+      "frame": {
+        "x": 56,
+        "y": 0,
+        "w": 28,
+        "h": 44
+      }
+    },
+    "frame_3": {
+      "frame": {
+        "x": 84,
+        "y": 0,
+        "w": 28,
+        "h": 44
+      }
+    }
+  }
+}
